@@ -40,6 +40,57 @@ productRoutes.get("/getProductsCategory", async (req: Request, res: Response) =>
     }
 })
 
+productRoutes.put("/:id", async (req:Request, res:Response) => {
+    const productId = parseInt(req.params.id)
+    const categoryId = parseInt(req.body.category_id)
+
+    const updatedProduct: Product = await req.body
+    const product: Product = await getProduct(productId)
+    const category: Category = await getCategory(categoryId)
+    
+    if (product == null || category == null) {
+        return res.status(404).send({ success: false, message: 'Product or category is not found!' })
+    }
+
+
+    // product.product_name = updatedProduct.product_name
+    // product.product_description = updatedProduct.product_description
+    // product.category = category
+    AppDataSource.getRepository(Product).merge(product, req.body)
+    await AppDataSource.getRepository(Product).save(product)
+    return res.status(200).send({ success: true, message:'Product is updated!', product})
+})
+
+productRoutes.get("/:id", async (req:Request, res:Response) => {
+    const productId = parseInt(req.params.id)
+    const product: Product = await getProduct(productId)
+    if (product == null) {
+        return res.status(404).send({ success:false, message:"Product isn't found!"})
+    }
+    return res.status(200).send(product);
+})
+
+productRoutes.delete("/:id", async (req:Request, res: Response) => {
+    const productId = parseInt(req.params.id)
+
+    const product: Product = await getProduct(productId)
+    if (product == null) {
+        return res.status(404).send({ success: false, message:"Product isn't found!" })
+    }
+    await AppDataSource.getRepository(Product).delete(req.params.id)
+    return res.status(200).send({ success: true, message: 'Product is deleted!'})
+})
+
+const getProduct = (productId: number) => {
+    return AppDataSource.getRepository(Product)
+                        .findOne({where : { id: productId }})
+}
+
+const getCategory = (categoryId: number) => {
+    return AppDataSource.getRepository(Category)
+                        .findOne({where : { id: categoryId }})
+}
+
 
 
 export default productRoutes;
