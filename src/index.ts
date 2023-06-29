@@ -5,6 +5,7 @@ import userRouters from "./routes/userRoutes"
 import productRoutes from "./routes/productRoutes"
 import categoryRoutes from "./routes/categoryRoutes"
 import bodyParser = require("body-parser")
+import { authRoutes } from "./routes/authRoutes"
 
 AppDataSource
         .initialize()
@@ -24,6 +25,7 @@ app.use(bodyParser.json())
 app.use("/users", userRouters)
 app.use("/products", productRoutes)
 app.use("/category", categoryRoutes)
+app.use("/auth", authRoutes)
 
 app.get("/", async (req:Request, res: Response) => {
     return res.send("hi2123")
