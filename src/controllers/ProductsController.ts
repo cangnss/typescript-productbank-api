@@ -1,6 +1,5 @@
-// controllers/AuthController.ts
+// controllers/ProductsController.ts
 import { Request, Response } from "express";
-import { User } from "../entity/User";
 import { AppDataSource } from "../data-source";
 import { Product } from "../entity/Product";
 import { Category } from "../entity/Category";
