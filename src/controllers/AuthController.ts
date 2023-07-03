@@ -1,6 +1,5 @@
 // controllers/AuthController.ts
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { User } from '../entity/User';
@@ -40,11 +39,11 @@ export class AuthController {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
 
-      const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, 'your-secret-key', {
+      const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, 'productbank', {
         expiresIn: '1h',
       });
 
-      res.json({ token });
+      res.status(200).json({ username: user.username, role: user.role, token });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: 'Something went wrong' });
